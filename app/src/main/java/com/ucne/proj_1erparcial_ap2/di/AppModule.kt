@@ -2,6 +2,7 @@ package com.ucne.proj_1erparcial_ap2.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ucne.proj_1erparcial_ap2.data.local.RoomPrestamoDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,26 +10,25 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
     // TODO: Inyectar la base de datos 
-/*    @Singleton
+    @Singleton
     @Provides
-    fun providesDatabase(@ApplicationContext context: Context): RoomExpampleDb {
+    fun providesDatabase(@ApplicationContext context: Context): RoomPrestamoDb {
         return Room.databaseBuilder(
             context,
-            RoomExpampleDb::class.java,
-            "RoomExample.db"
+            RoomPrestamoDb::class.java,
+            "PrestamoDb.db"
         )
             .fallbackToDestructiveMigration()
             .build()
-    }*/
+    }
 
     // TODO: Inyectar el DAO 
-/*    @Singleton
+    @Singleton
     @Provides
-    fun providesOcupacionDao(db: RoomExpampleDb) = db.ocupacionDao*/
+    fun providesPrestamoDao(db: RoomPrestamoDb) = db.prestamoDao
 }

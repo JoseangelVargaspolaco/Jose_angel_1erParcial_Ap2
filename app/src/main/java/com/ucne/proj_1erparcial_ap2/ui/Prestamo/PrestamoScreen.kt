@@ -46,11 +46,11 @@ fun PrestamoScreen(viewModel: PrestamoViewModel = hiltViewModel()) {
 private fun PrestamoBody(
     viewModel: PrestamoViewModel
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center)) {
 
         OutlinedTextField(
             modifier = Modifier
-                .padding(2.dp)
+                .padding(8.dp)
                 .fillMaxWidth(),
             value = viewModel.Deudor,
             onValueChange = { viewModel.Deudor = it },

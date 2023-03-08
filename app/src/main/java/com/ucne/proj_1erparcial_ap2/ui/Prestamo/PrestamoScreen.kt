@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ucne.proj_1erparcial_ap2.R
 import com.ucne.proj_1erparcial_ap2.data.local.entity.PrestamoEntity
 
 @Composable
@@ -28,14 +27,14 @@ fun PrestamoScreen(viewModel: PrestamoViewModel = hiltViewModel()) {
     ) {
         PrestamoBody(viewModel)
 
-        Spacer(modifier = Modifier.padding(14.dp))
+        Spacer(modifier = Modifier.padding(18.dp))
         Text(
-            text = "Lista de Prestamos", fontSize = 50.sp,
+            text = "Lista de Prestamos", fontSize = 40.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.Center)
         )
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(18.dp))
         val uiState by viewModel.uiState.collectAsState()
         PrestamoListScreen(uiState.prestamoList)
     }
@@ -46,11 +45,15 @@ fun PrestamoScreen(viewModel: PrestamoViewModel = hiltViewModel()) {
 private fun PrestamoBody(
     viewModel: PrestamoViewModel
 ) {
-    Column(modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.Center)
+    ) {
 
         OutlinedTextField(
             modifier = Modifier
-                .padding(8.dp)
+                .size(330.dp, 60.dp)
                 .fillMaxWidth(),
             value = viewModel.Deudor,
             onValueChange = { viewModel.Deudor = it },
@@ -68,13 +71,13 @@ private fun PrestamoBody(
 
         OutlinedTextField(
             modifier = Modifier
-                .padding(8.dp)
+                .size(330.dp, 60.dp)
                 .fillMaxWidth(),
             value = viewModel.Concepto,
             onValueChange = { viewModel.Concepto = it },
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.DocumentScanner,
+                    imageVector = Icons.Filled.Description,
                     contentDescription = null,
                     modifier = Modifier
                         .size(33.dp)
@@ -86,7 +89,7 @@ private fun PrestamoBody(
 
         OutlinedTextField(
             modifier = Modifier
-                .padding(8.dp)
+                .size(330.dp, 60.dp)
                 .fillMaxWidth(),
             value = viewModel.Monto,
             onValueChange = { viewModel.Monto = it },
@@ -102,17 +105,25 @@ private fun PrestamoBody(
             },
             label = { Text("Monto") }
         )
+    }
 
-        Spacer(modifier = Modifier.padding(10.dp))
+    Spacer(modifier = Modifier.padding(14.dp))
 
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.BottomEnd)
+    ) {
         ExtendedFloatingActionButton(
             modifier = Modifier
-                .size(60.dp,60.dp)
-                .align(Alignment.End)
+                .size(60.dp, 50.dp)
+                .align(Alignment.CenterHorizontally)
                 .wrapContentSize(Alignment.Center),
             text = { Text("") },
             icon = { Icon(imageVector = Icons.Filled.Save, contentDescription = "Save") },
-            onClick = { viewModel.insertar() }
+            onClick = {
+                viewModel.insertar()
+            }
         )
     }
 }
@@ -128,18 +139,20 @@ private fun PrestamoListScreen(prestamoList: List<PrestamoEntity>) {
 @Composable
 private fun PrestamoRow(prestamo: PrestamoEntity) {
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.Center)
     ) {
+        Divider(Modifier.fillMaxWidth())
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .wrapContentSize(Alignment.CenterStart)
         ) {
-
             Text(
                 text = prestamo.Deudor, fontSize = 50.sp,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.wrapContentSize(Alignment.CenterStart)
             )
         }
         Row(
@@ -149,10 +162,11 @@ private fun PrestamoRow(prestamo: PrestamoEntity) {
         ) {
             Text(
                 text = prestamo.Concepto,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.wrapContentSize(Alignment.CenterStart)
             )
             Text(
-                String.format("%.2f", prestamo.Monto),
+                String.format("$ %.2f", prestamo.Monto),
                 fontSize = 50.sp,
                 textAlign = TextAlign.End,
                 modifier = Modifier

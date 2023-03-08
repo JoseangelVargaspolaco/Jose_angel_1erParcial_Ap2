@@ -55,8 +55,8 @@ class PrestamoViewModel @Inject constructor(
     }
 
     private fun Limpiar() {
-        Deudor = ""
-        Concepto = ""
-        Monto = ""
+        Deudor.toString()?:null
+        Concepto.toString()?:null
+        Monto.toString()?:null
     }
 }

@@ -6,10 +6,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.twotone.Check
+import androidx.compose.material.icons.twotone.Description
+import androidx.compose.material.icons.twotone.Error
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -21,10 +25,18 @@ import com.ucne.proj_1erparcial_ap2.data.local.entity.PrestamoEntity
 fun PrestamoScreen(viewModel: PrestamoViewModel = hiltViewModel()) {
 
     Column(
-        Modifier
-            .fillMaxSize()
+        Modifier.fillMaxWidth()
             .wrapContentSize(Alignment.Center)
     ) {
+        Spacer(modifier = Modifier.padding(60.dp))
+        Text(
+            text = "Prestamos", fontSize = 40.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center)
+        )
+
+        Spacer(modifier = Modifier.padding(15.dp))
         PrestamoBody(viewModel)
 
         Spacer(modifier = Modifier.padding(18.dp))
@@ -34,7 +46,7 @@ fun PrestamoScreen(viewModel: PrestamoViewModel = hiltViewModel()) {
                 .fillMaxWidth()
                 .wrapContentSize(Alignment.Center)
         )
-        Spacer(modifier = Modifier.padding(18.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         val uiState by viewModel.uiState.collectAsState()
         PrestamoListScreen(uiState.prestamoList)
     }
@@ -56,7 +68,7 @@ private fun PrestamoBody(
                 .size(330.dp, 60.dp)
                 .fillMaxWidth(),
             value = viewModel.Deudor,
-            onValueChange = { viewModel.Deudor = it },
+            onValueChange = viewModel::onDeudorChanged,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Person,
@@ -66,34 +78,73 @@ private fun PrestamoBody(
                         .padding(4.dp)
                 )
             },
-            label = { Text("Deudor") }
+            label = { Text("Deudor") },
+            isError = viewModel.deudorError.isNotBlank(),
+            trailingIcon = {
+                if (viewModel.deudorError.isNotBlank()) {
+                    Icon(imageVector = Icons.TwoTone.Error, contentDescription = "error")
+                }else if(viewModel.hayError)
+                {
+                    Icon(imageVector = Icons.TwoTone.Check, contentDescription = "success")
+                }
+            }
         )
+        if (viewModel.deudorError.isNotBlank()) {
+            Text(
+                text = viewModel.deudorError,
+                color = MaterialTheme.colorScheme.error
+            )
+        }else if(viewModel.hayError){
+            Text(
+                text = viewModel.deudorError,
+                color = Color.Green
+            )
+        }
 
         OutlinedTextField(
             modifier = Modifier
                 .size(330.dp, 60.dp)
                 .fillMaxWidth(),
             value = viewModel.Concepto,
-            onValueChange = { viewModel.Concepto = it },
+            onValueChange = viewModel::onConceptoChanged,
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.Description,
+                    imageVector = Icons.TwoTone.Description,
                     contentDescription = null,
                     modifier = Modifier
                         .size(33.dp)
                         .padding(4.dp)
                 )
             },
-            label = { Text("Concepto") }
+            label = { Text("Concepto") },
+            isError = viewModel.conceptoError.isNotBlank(),
+            trailingIcon = {
+                if (viewModel.conceptoError.isNotBlank()) {
+                    Icon(imageVector = Icons.TwoTone.Error, contentDescription = "error")
+                }else if(viewModel.hayError){
+                    Icon(imageVector = Icons.TwoTone.Check, contentDescription = "success")
+                }
+            }
         )
+
+        if (viewModel.conceptoError.isNotBlank()) {
+            Text(
+                text = viewModel.conceptoError,
+                color = MaterialTheme.colorScheme.error
+            )
+        }else if(viewModel.hayError){
+            Text(
+                text = viewModel.conceptoError,
+                color = Color.Green
+            )
+        }
 
         OutlinedTextField(
             modifier = Modifier
                 .size(330.dp, 60.dp)
                 .fillMaxWidth(),
             value = viewModel.Monto,
-            onValueChange = { viewModel.Monto = it },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onValueChange = viewModel::onMontoChanged,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.AttachMoney,
@@ -103,28 +154,105 @@ private fun PrestamoBody(
                         .padding(4.dp)
                 )
             },
-            label = { Text("Monto") }
+            label = { Text("Monto") },
+            isError = viewModel.montoError.isNotBlank(),
+            trailingIcon = {
+                if (viewModel.montoError.isNotBlank()) {
+                    Icon(imageVector = Icons.TwoTone.Error, contentDescription = "error")
+                }else if(viewModel.hayError){
+                    Icon(imageVector = Icons.TwoTone.Check, contentDescription = "success")
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Decimal
+            )
         )
+
+        if (viewModel.montoError.isNotBlank()) {
+            Text(
+                text = viewModel.montoError,
+                color = MaterialTheme.colorScheme.error
+            )
+        }else if(viewModel.hayError){
+            Text(
+                text = viewModel.montoError,
+                color = Color.Green
+            )
+        }
     }
 
     Spacer(modifier = Modifier.padding(14.dp))
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentSize(Alignment.BottomEnd)
+            .wrapContentSize(Alignment.Center)
     ) {
-        ExtendedFloatingActionButton(
+        Row(
             modifier = Modifier
-                .size(60.dp, 50.dp)
-                .align(Alignment.CenterHorizontally)
-                .wrapContentSize(Alignment.Center),
-            text = { Text("") },
-            icon = { Icon(imageVector = Icons.Filled.Save, contentDescription = "Save") },
-            onClick = {
-                viewModel.insertar()
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center)
+        ) {
+            Box()
+            {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier
+                        .size(60.dp, 50.dp),
+                    containerColor = Color.Blue,
+                    text = { Text("") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Cached,
+                            contentDescription = "Clear",
+                            tint = Color.White
+                        )
+                    },
+                    onClick = {
+                        viewModel.Limpiar()
+                    }
+                )
             }
-        )
+
+            Spacer(modifier = Modifier.padding(20.dp))
+            Box()
+            {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier
+                        .size(60.dp, 50.dp),
+                    containerColor = Color.Green,
+                    text = { Text("") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Save,
+                            contentDescription = "Save",
+                            tint = Color.White
+                        )
+                    },
+                    onClick = {
+                        viewModel.insertar()
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(20.dp))
+            Box() {
+                ExtendedFloatingActionButton(
+                    modifier = Modifier
+                        .size(60.dp, 50.dp),
+                    containerColor = Color.Red,
+                    text = { Text("") },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                            tint = Color.White
+                        )
+                    },
+                    onClick = {
+                        viewModel.eliminar()
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -136,6 +264,7 @@ private fun PrestamoListScreen(prestamoList: List<PrestamoEntity>) {
         }
     }
 }
+
 @Composable
 private fun PrestamoRow(prestamo: PrestamoEntity) {
     Column(

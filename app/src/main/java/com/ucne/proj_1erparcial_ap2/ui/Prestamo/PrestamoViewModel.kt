@@ -22,9 +22,15 @@ data class PrestamoUiState(
 class PrestamoViewModel @Inject constructor(
     private val prestamoRepository: PrestamoRepository
 ) : ViewModel() {
-    var Deudor by mutableStateOf("")
-    var Concepto by mutableStateOf("")
-    var Monto by mutableStateOf("")
+    var Deudor by mutableStateOf("Anonimo")
+    var Concepto by mutableStateOf("Ingeniero")
+    var Monto by mutableStateOf("30000")
+
+    var conceptoError by mutableStateOf("")
+    var montoError by mutableStateOf("")
+    var deudorError by mutableStateOf("")
+
+    var hayError = false
 
     var uiState = MutableStateFlow(PrestamoUiState())
         private set
@@ -41,7 +47,24 @@ class PrestamoViewModel @Inject constructor(
         }
     }
 
+    fun onDeudorChanged(Deudor: String) {
+        this.Deudor = Deudor
+        Validation()
+    }
+    fun onMontoChanged(Monto: String) {
+        this.Monto = Monto
+        Validation()
+    }
+
+    fun onConceptoChanged(Concepto: String) {
+        this.Concepto = Concepto
+        Validation()
+    }
+
     fun insertar() {
+        if (Validation())
+            return
+
         val prestamo = PrestamoEntity(
             Deudor = Deudor,
             Concepto = Concepto,
@@ -54,7 +77,55 @@ class PrestamoViewModel @Inject constructor(
         }
     }
 
-    private fun Limpiar() {
+    fun eliminar() {
+        if (Validation())
+            return
+
+        val prestamo = PrestamoEntity(
+            Deudor = Deudor,
+            Concepto = Concepto,
+            Monto = Monto.toDoubleOrNull()?:0.0
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            prestamoRepository.delete(prestamo)
+            Limpiar()
+        }
+    }
+
+    private fun Validation(): Boolean {
+
+        deudorError = ""
+
+        if (Deudor.isBlank()) {
+            deudorError = "Debe indicar el deudor"
+            hayError = true
+        }else{
+            hayError
+        }
+
+        conceptoError = ""
+
+        if (Concepto.isBlank()) {
+            conceptoError = "Debe indicar el concepto"
+            hayError = true
+        }else{
+            hayError
+        }
+
+        montoError = ""
+
+        if ((Monto.toDoubleOrNull() ?: 0.0) <= 0.0) {
+            montoError = "Debe indicar un monto mayor que cero"
+            hayError = true
+        }else{
+            hayError
+        }
+
+        return hayError
+    }
+
+    fun Limpiar() {
         Deudor.toString()?:null
         Concepto.toString()?:null
         Monto.toString()?:null

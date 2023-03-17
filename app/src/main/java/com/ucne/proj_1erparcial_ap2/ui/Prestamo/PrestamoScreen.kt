@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.twotone.AttachMoney
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.Description
 import androidx.compose.material.icons.twotone.Error
@@ -83,7 +84,7 @@ private fun PrestamoBody(
             trailingIcon = {
                 if (viewModel.deudorError.isNotBlank()) {
                     Icon(imageVector = Icons.TwoTone.Error, contentDescription = "error")
-                }else if(viewModel.hayError)
+                }else if(viewModel.Deudor.isNotEmpty())
                 {
                     Icon(imageVector = Icons.TwoTone.Check, contentDescription = "success")
                 }
@@ -93,11 +94,6 @@ private fun PrestamoBody(
             Text(
                 text = viewModel.deudorError,
                 color = MaterialTheme.colorScheme.error
-            )
-        }else if(viewModel.hayError){
-            Text(
-                text = viewModel.deudorError,
-                color = Color.Green
             )
         }
 
@@ -121,7 +117,7 @@ private fun PrestamoBody(
             trailingIcon = {
                 if (viewModel.conceptoError.isNotBlank()) {
                     Icon(imageVector = Icons.TwoTone.Error, contentDescription = "error")
-                }else if(viewModel.hayError){
+                }else if(viewModel.Concepto.isNotEmpty()){
                     Icon(imageVector = Icons.TwoTone.Check, contentDescription = "success")
                 }
             }
@@ -131,11 +127,6 @@ private fun PrestamoBody(
             Text(
                 text = viewModel.conceptoError,
                 color = MaterialTheme.colorScheme.error
-            )
-        }else if(viewModel.hayError){
-            Text(
-                text = viewModel.conceptoError,
-                color = Color.Green
             )
         }
 
@@ -147,8 +138,8 @@ private fun PrestamoBody(
             onValueChange = viewModel::onMontoChanged,
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.AttachMoney,
-                    contentDescription = null,
+                    imageVector = Icons.TwoTone.AttachMoney,
+                    contentDescription = "AttachMoney",
                     modifier = Modifier
                         .size(33.dp)
                         .padding(4.dp)
@@ -159,7 +150,7 @@ private fun PrestamoBody(
             trailingIcon = {
                 if (viewModel.montoError.isNotBlank()) {
                     Icon(imageVector = Icons.TwoTone.Error, contentDescription = "error")
-                }else if(viewModel.hayError){
+                }else if(viewModel.Monto.isNotEmpty()){
                     Icon(imageVector = Icons.TwoTone.Check, contentDescription = "success")
                 }
             },
@@ -168,15 +159,10 @@ private fun PrestamoBody(
             )
         )
 
-        if (viewModel.montoError.isNotBlank()) {
+        if (viewModel.montoError.isNullOrEmpty()) {
             Text(
                 text = viewModel.montoError,
                 color = MaterialTheme.colorScheme.error
-            )
-        }else if(viewModel.hayError){
-            Text(
-                text = viewModel.montoError,
-                color = Color.Green
             )
         }
     }
@@ -207,7 +193,7 @@ private fun PrestamoBody(
                         )
                     },
                     onClick = {
-                        viewModel.Limpiar()
+                        viewModel.nuevo()
                     }
                 )
             }

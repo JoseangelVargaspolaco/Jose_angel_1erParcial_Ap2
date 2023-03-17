@@ -22,15 +22,13 @@ data class PrestamoUiState(
 class PrestamoViewModel @Inject constructor(
     private val prestamoRepository: PrestamoRepository
 ) : ViewModel() {
-    var Deudor by mutableStateOf("Anonimo")
-    var Concepto by mutableStateOf("Ingeniero")
-    var Monto by mutableStateOf("30000")
+    var Deudor by mutableStateOf("")
+    var Concepto by mutableStateOf("")
+    var Monto by mutableStateOf("")
 
     var conceptoError by mutableStateOf("")
     var montoError by mutableStateOf("")
     var deudorError by mutableStateOf("")
-
-    var hayError = false
 
     var uiState = MutableStateFlow(PrestamoUiState())
         private set
@@ -95,6 +93,8 @@ class PrestamoViewModel @Inject constructor(
 
     private fun Validation(): Boolean {
 
+        var hayError = false
+
         deudorError = ""
 
         if (Deudor.isBlank()) {
@@ -125,9 +125,15 @@ class PrestamoViewModel @Inject constructor(
         return hayError
     }
 
-    fun Limpiar() {
-        Deudor.toString()?:null
-        Concepto.toString()?:null
-        Monto.toString()?:null
+    fun nuevo(){
+        Deudor = ""
+        Concepto = ""
+        Monto = ""
+    }
+
+    private fun Limpiar() {
+        Deudor = ""
+        Concepto = ""
+        Monto = ""
     }
 }
